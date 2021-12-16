@@ -67,8 +67,16 @@ int main(int argc, char** argv) {
                 });
             if (h != ls.headers.end()) {
                 scan_to_cloud(xyz_lut, h->timestamp, ls, cloud);
-                lidar_pub.publish(ouster_ros::cloud_to_cloud_msg(
-                    cloud, h->timestamp, sensor_frame));
+                //lidar_pub.publish(ouster_ros::cloud_to_cloud_msg(
+                //   cloud, h->timestamp, sensor_frame));
+
+                sensor_msgs::PointCloud2 this_cloud_msg{};
+
+                this_cloud_msg = ouster_ros::cloud_to_cloud_msg(
+                    cloud, h->timestamp, sensor_frame);
+                
+                this_cloud_msg.header.stamp = pm.stamp;
+                lidar_pub.publish(this_cloud_msg);
             }
         }
     };
